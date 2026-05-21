@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(xelatex -interaction=nonstopmode main.tex)",
+      "Bash(pdftoppm -png -r 150 main.pdf preview)",
+      "Bash(magick identify *)",
+      "Bash(pdftocairo -jpeg -r 150 -f 1 -l 5 main.pdf preview.jpg)",
+      "Bash(ffmpeg -y -i preview-01.png preview-01.jpg)",
+      "Bash(ffmpeg -y -i preview-02.png preview-02.jpg)",
+      "Bash(ffmpeg -y -i preview-03.png preview-03.jpg)",
+      "Bash(pdftotext -nopgbrk -layout main.pdf -)",
+      "Bash(pdfinfo main.pdf)",
+      "Bash(fc-list :lang=zh)",
+      "Bash(pdffonts main.pdf)",
+      "Bash(pdftotext main.pdf -)",
+      "Bash(pip install *)",
+      "Bash(fc-list)",
+      "Bash(otfinfo -u \"D:/work/FZShuSong-Z01S/FZShuSong-Z01S.ttf\")",
+      "Bash(otfinfo *)",
+      "Bash(xelatex -interaction=nonstopmode test-zero.tex)",
+      "Bash(cp \"D:/work/FZShuSong-Z01S/FZShuSong-Z01S.ttf\" \"D:/TeX/texlive/2026/texmf-local/fonts/truetype/FZShuSong-Z01S.ttf\")",
+      "Bash(mkdir -p \"D:/TeX/texlive/2026/texmf-local/fonts/truetype\")",
+      "Bash(cp \"D:/work/FZShuSong-Z01S/FZShuSong-Z01S.ttf\" \"D:/TeX/texlive/2026/texmf-local/fonts/truetype/\")",
+      "Bash(fc-cache -fv \"D:/TeX/texlive/2026/texmf-local/fonts/truetype/\")",
+      "Bash(mktexlsr)",
+      "Bash(kpsewhich FZShuSong-Z01S.ttf)",
+      "Bash(mktexlsr \"D:/TeX/texlive/2026/texmf-local\")",
+      "Bash(xelatex -interaction=nonstopmode test-zero2.tex)",
+      "Bash(xelatex -interaction=nonstopmode test-zero3.tex)",
+      "Bash(pip list *)",
+      "Bash(pip show *)",
+      "Bash(/d/ana/python.exe *)"
+    ]
+  }
+}

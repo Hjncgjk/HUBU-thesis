@@ -1,165 +1,597 @@
 % ============================================================
-% 主文件 main.tex
-% 心河大学学位论文 LaTeX 模板
+% 湖北大学本科毕业论文（设计）LaTeX 模板
+% 符合 Word 模板（试用第二版）格式要求
+% v2 — 修复：页边距2cm、1.5倍行距、封面/声明页、字体等
 % ============================================================
 
-% ------------------------------------------------------------
-% 文档类选择
-% ------------------------------------------------------------
-% 可选参数:
-%   - print: 双面打印模式
-%   - draft: 草稿模式 (显示溢出框)
-% ------------------------------------------------------------
-\documentclass{main}
-% \documentclass[print]{main}  % 双面打印版本
+\documentclass[a4paper,12pt]{article}
+\usepackage[UTF8]{ctex}
+\usepackage{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage{tocloft}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{footmisc}
+\usepackage{multirow}
+\usepackage{etoolbox}
+\usepackage{framed}
 
-% ------------------------------------------------------------
-% 论文基本信息设置
-% ------------------------------------------------------------
-\title{基于LaTeX的学位论文排版系统研究}
-\author{张三}
-\university{XX大学}
-\college{计算机科学与技术学院}
-\major{计算机科学与技术}
-\advisor{李四教授}
-\studentid{2024123456}
-\degree{硕士学位论文}
-\submitdate{2026年3月}
+% ============================================================
+% 页面设置（全2cm）
+% ============================================================
+\geometry{a4paper,margin=2cm}
 
-% ------------------------------------------------------------
-% 加载额外宏包 (根据需要在导言区添加)
-% ------------------------------------------------------------
-% \usepackage{...}
+% ============================================================
+% 1.5倍行距（\onehalfspacing = 12pt文字/约18pt行距）
+% ============================================================
+% 1.5倍行距
+\onehalfspacing
 
-% ------------------------------------------------------------
-% 参考文献数据库
-% ------------------------------------------------------------
-% 使用 natbib + bibtex，无需此行
-% \addbibresource{references.bib}  % 这是 biblatex 的命令
+% 段落首行缩进2字符
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
 
-% ------------------------------------------------------------
-% 引用格式设置
-% ------------------------------------------------------------
-% 上标引用显示带方括号的 [1] 格式
-\renewcommand*{\citenumfont}[1]{[#1]}
+% ============================================================
+% 字体设置
+% 正文小四号=12pt，由文档类选项提供；行距由 \onehalfspacing 控制
+% ============================================================
+
+% ============================================================
+% 页眉页脚（页码居中，从摘要页开始）
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[C]{\thepage}
+    \renewcommand{\headrulewidth}{0pt}
+}
+
+% ============================================================
+% 章节标题格式（正文章节另起一页）
+% ============================================================
+% 章标题：三号黑体加粗居中
+\titleformat{\section}
+    {\centering\zihao{3}\bfseries}
+    {\thesection}{1em}{}
+\titlespacing*{\section}{0pt}{0pt}{12pt}
+
+% 一级节标题（如 1.1）：四号黑体居左
+\titleformat{\subsection}
+    {\zihao{4}\bfseries}
+    {\thesubsection}{1em}{}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+
+% 二级节标题（如 1.1.1）：小四号宋体居左（不加粗）
+\titleformat{\subsubsection}
+    {\zihao{-4}\normalfont}
+    {\thesubsubsection}{1em}{}
+\titlespacing*{\subsubsection}{0pt}{6pt}{3pt}
+
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
+
+% ============================================================
+% 正文章节手动换页（参考文献、附录、致谢不换页）
+% 使用方法：在每个正文章节前加上 \clearpage
+% ============================================================
+
+% ============================================================
+% 目录格式
+% ============================================================
+\renewcommand{\cftsecfont}{\zihao{4}\normalfont}
+\renewcommand{\cftsecpagefont}{\zihao{4}\normalfont}
+\renewcommand{\cftsubsecfont}{\zihao{-4}\normalfont}
+\setlength{\cftbeforesecskip}{0pt}
+\setlength{\cftbeforesubsecskip}{0pt}
+
+% ============================================================
+% 图表标题格式（五号宋体居中）
+% ============================================================
+% 图表与上下文之间空一行（约12pt）
+\setlength{\intextsep}{12pt plus 2pt minus 2pt}
+
+\DeclareCaptionFont{five}{\fontsize{10.5pt}{15.75pt}\selectfont}
+\captionsetup{
+    font=five,
+    justification=centering,
+    labelsep=space
+}
+\renewcommand{\figurename}{图}
+\renewcommand{\tablename}{表}
+
+% 三线表配置
+\renewcommand{\arraystretch}{1.3}
+\setlength{\heavyrulewidth}{0.8pt}
+\setlength{\lightrulewidth}{0.4pt}
+\setlength{\cmidrulewidth}{0.3pt}
+
+% 表格内容字体为五号(10.5pt)，英文数字为Times New Roman
+\AtBeginEnvironment{table}{\fontsize{10.5pt}{15.75pt}\selectfont}
+
+% ============================================================
+% 列表格式（完全左对齐，不突出序号）
+% ============================================================
+% 注意：为实现完全左对齐，正文中请手动使用 \noindent 加序号，不要用 enumerate/itemize
+
+% ============================================================
+% 脚注格式（小五号宋体）
+% ============================================================
+\renewcommand{\footnotesize}{\fontsize{9pt}{12pt}\selectfont}
+\renewcommand{\footnoterule}{%
+    \kern -3pt
+    \hrule width \textwidth height 0.5pt
+    \kern 2pt
+}
+
+% ============================================================
+% 封面字体定义——用 \coverfont\bfseries 调用
+% 方正书宋简体（直接引用字体文件路径）
+\newCJKfontfamily\coverfont{FZShuSong-Z01S}[Path=D:/work/FZShuSong-Z01S/,AutoFakeBold]
+
+% 超链接设置（目录黑色）
+% ============================================================
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=black
+}
 
 % ============================================================
 % 正文开始
 % ============================================================
 \begin{document}
 
-% ------------------------------------------------------------
-% 封面
-% ------------------------------------------------------------
+% ============================================================
+% 封面（无页码）
+% ============================================================
 \begin{titlepage}
-    \centering
-    \vspace*{1cm}
-    
-    % 学校名称
-    {\zihao{-2}\bfseries 心河大学}
-    
-    \vspace{1.5cm}
-    
-    % 学位类型
-    {\zihao{2}\bfseries 硕士学位论文}
-    
-    \vspace{3cm}
-    
-    % 论文题目
-    {\zihao{-2}\bfseries 基于LaTeX的学位论文排版系统研究}
-    
-    \vspace{4cm}
-    
-    % 作者信息
-    {\zihao{4}
-    \begin{tabular}{rl}
-        \textbf{学院名称：} & 计算机科学与技术学院 \\[0.8cm]
-        \textbf{专业名称：} & 计算机科学与技术 \\[0.8cm]
-        \textbf{作者姓名：} & 张三 \\[0.8cm]
-        \textbf{学\qquad 号：} & 2024123456 \\[0.8cm]
-        \textbf{指导教师：} & 李四教授 \\[0.8cm]
-    \end{tabular}
-    }
-    
-    \vfill
-    
-    % 提交日期
-    {\zihao{4}\bfseries 2026年3月}
-    
+
+\begin{center}
+\includegraphics[width=11cm]{湖北大学logo.jpg}
+
+\vspace{1cm}
+
+{\coverfont\bfseries\zihao{1} 本\hspace{0.5em}科\hspace{0.5em}毕\hspace{0.5em}业\hspace{0.5em}论\hspace{0.5em}文\hspace{0.5em}（\hspace{0.5em}设\hspace{0.5em}计）}
+\end{center}
+
+\vspace{3.5cm}
+
+% 第1行：题目（左对齐带下划线）
+\noindent
+{\coverfont\bfseries\zihao{2} 题\hspace{1em}目} \rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{0.5cm}
+
+% 第2行：题目续（下划线）
+\noindent
+\hspace*{3.6em}\rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{1.2cm}
+
+% 第3行：作者姓名（左对齐）
+\noindent
+{\coverfont\bfseries\zihao{-2} 作者姓名} \rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{0.7cm}
+
+% 第4行：学号（左对齐，中间两个空格）
+\noindent
+{\coverfont\bfseries\zihao{-2} 学\hspace{2em}号} \rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{0.7cm}
+
+% 第5行：专业年级（左对齐）
+\noindent
+{\coverfont\bfseries\zihao{-2} 专业年级} \rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{0.7cm}
+
+% 第6行：学院（左对齐，中间两个空格）
+\noindent
+{\coverfont\bfseries\zihao{-2} 学\hspace{2em}院} \rule[-0.3ex]{0.68\textwidth}{0.5pt}
+
+\vspace{0.7cm}
+
+% 第7行：指导教师/职称
+\noindent
+{\coverfont\bfseries\zihao{-2} 指导教师/职称} \rule[-0.3ex]{0.55\textwidth}{0.5pt}
+
+\vspace{0.3cm}
+
+% 第8行：（可填写1-3人）
+\noindent
+{\coverfont\bfseries\zihao{-3}（可填写1-3人）}
+
+\vfill
+
+% 日期（〇使用默认字体，其余用FZShuSong）
+\begin{center}
+{\coverfont\bfseries\zihao{-3} 二}{\bfseries\zihao{-3}〇}{\coverfont\bfseries\zihao{-3} 二六\hspace{2em}年\hspace{2em}月\hspace{2em}日}
+\end{center}
+
 \end{titlepage}
 
-% ------------------------------------------------------------
-% 原创性声明 (可根据学校要求添加)
-% ------------------------------------------------------------
-% \input{chapters/declaration}
+% ============================================================
+% 第二页：原创性声明（完整大表格，含外框线和内部网格线）
+% ============================================================
+\newpage
+\thispagestyle{empty}
 
-% ------------------------------------------------------------
-% 摘要
-% ------------------------------------------------------------
-\frontmatter
-\input{chapters/abstract}
+\vspace*{2em}
 
-% ------------------------------------------------------------
-% 目录
-% ------------------------------------------------------------
-\clearpage  % 分页，目录从新页开始
+\begin{center}
+{\zihao{3}\bfseries 湖北大学本科生毕业论文（设计）原创性声明}
+\end{center}
+
+\vspace{0.5cm}
+
+\newlength{\cF}
+\setlength{\cF}{\dimexpr\linewidth-23em-12\tabcolsep-7\arrayrulewidth\relax}
+\noindent
+\begin{tabular}{|p{5em}|p{5em}|p{3em}|p{5em}|p{5em}|p{\cF}|}
+\hline
+\multicolumn{2}{|c|}{毕业论文（设计）} & \multicolumn{4}{l|}{中文：} \\
+\cline{3-6}
+\multicolumn{2}{|c|}{题目} & \multicolumn{4}{l|}{外文：} \\
+\hline
+学生姓名 & & 年级 & & 学号 & \\
+\hline
+所在学院 & \multicolumn{2}{c}{} & & 所学专业 & \\
+\hline
+\multicolumn{6}{|p{\dimexpr\linewidth-2\tabcolsep-2\arrayrulewidth-1\ccwd\relax}|}{
+{\centering\bfseries 学生声明\par}
+\vspace{2\baselineskip}
+\setstretch{1.5}%
+\setlength{\parindent}{4em}%
+我承诺该毕业论文（设计）为我本人独立撰写完成，在毕业论文（设计）撰写过程中遵守国家法律规章和学校有关规定，恪守学术规范，在本人的毕业论文（设计）中未剽窃、抄袭他人的学术观点、思想和成果，未篡改数据。\par
+本人从未参与于毕业论文（设计）买卖、代写等有关的非法活动；本人如有违规违法行为发生，愿承担一切责任，接受学校和有关部门的处理。\par
+\vspace{0.4cm}
+\noindent\makebox[\linewidth][r]{学生（签名）：\hspace{12em}}\par
+\vspace{0.2cm}
+\noindent\hspace*{\fill} 2026年\hspace{2em}月\hspace{2em}日\par
+} \\
+\hline
+\multicolumn{6}{|p{\dimexpr\linewidth-2\tabcolsep-2\arrayrulewidth-1\ccwd\relax}|}{
+{\centering\bfseries 指导教师声明\par}
+\vspace{2\baselineskip}
+\setstretch{1.5}%
+\setlength{\parindent}{4em}%
+我承诺在指导学生毕业论文（设计）活动中遵守国家法律规章和学校有关规定，恪守学术规范，经过本人认真的核查，该生的毕业论文（设计）为其本人在我本人指导下独立撰写完成，撰写过程中未发现有剽窃、抄袭他人的学术观点、思想和成果的现象，未发现篡改数据；未发现该毕业论文（设计）涉及买卖、代写等有关的非法活动。\par
+本人从未组织或参与毕业论文（设计）买卖、代写等非法活动。\par
+\vspace{0.4cm}
+\noindent\makebox[\linewidth][r]{指导教师（签名）：\hspace{12em}}\par
+\vspace{0.2cm}
+\noindent\hspace*{\fill} 2026年\hspace{2em}月\hspace{2em}日\par
+} \\
+\hline
+\end{tabular}
+
+% ============================================================
+% 版权使用授权书
+% ============================================================
+\newpage
+\thispagestyle{empty}
+\begin{center}
+{\zihao{3}\bfseries 版权使用授权书}
+\end{center}
+
+\vspace{1cm}
+
+{\setlength{\parindent}{2em}
+本人完全了解湖北大学有权保留并向有关部门或机构送交本论文（设计）的复印件和电子版，允许本论文（设计）被查阅和借阅。本人授权湖北大学将本论文（设计）的全部或部分内容编入有关数据进行检索和传播，可以采用影印、缩印或扫描等复制手段保存和汇编本论文（设计）。
+
+\vspace{2cm}
+
+\noindent 作者（签名）：\hspace{5em} 指导教师（签名）：
+
+\vspace{1cm}
+
+\noindent 日\hspace{2em}期：2026年\hspace{2em}月\hspace{2em}日
+}
+
+% 设置页码从摘要页开始（罗马数字）
+\newpage
+\pagenumbering{Roman}
+
+% ============================================================
+% 中文摘要
+% ============================================================
+\thispagestyle{plain}
+\phantomsection
+\addcontentsline{toc}{section}{摘要}
+
+\begin{center}
+    {\zihao{3}\bfseries 摘\hspace{4\ccwd}要}
+\end{center}
+
+\vspace{0.5cm}
+
+随着深度学习技术的快速发展，图像识别领域取得了突破性进展。针对传统图像识别方法在复杂场景下识别准确率低的问题，本文提出了一种基于改进卷积神经网络的图像识别方法。首先，收集并标注了包含10万张图像的大规模数据集；其次，设计了一种多尺度特征提取模块，增强网络对图像细节的捕捉能力；最后，在多个公开数据集上进行了实验验证。
+
+实验结果表明，本文提出的方法在ImageNet数据集上取得了95.6\%的识别准确率，相比传统方法提升了3.2个百分点。该方法在光照变化、遮挡等复杂场景下仍能保持较高的识别稳定性。通过消融实验验证了多尺度模块的有效性，并分析了不同网络深度的性能影响。
+
+本文的研究成果可为智能监控、自动驾驶等领域的图像识别应用提供技术参考，同时为深度网络结构设计提供新的思路。
+
+\vspace{0.5cm}
+
+\noindent\textbf{关键词：} 深度学习；卷积神经网络；图像识别；特征提取；多尺度
+
+% ============================================================
+% 英文摘要
+% ============================================================
+\newpage
+\thispagestyle{plain}
+\phantomsection
+\addcontentsline{toc}{section}{ABSTRACT}
+
+\begin{center}
+    {\fontsize{16pt}{24pt}\selectfont\textbf{ABSTRACT}}
+\end{center}
+
+\vspace{0.5cm}
+
+With the rapid development of deep learning technology, breakthrough progress has been made in the field of image recognition. To address the problem of low recognition accuracy of traditional methods in complex scenes, this paper proposes an image recognition method based on an improved convolutional neural network. First, a large-scale dataset containing 100,000 images is collected and annotated. Second, a multi-scale feature extraction module is designed to enhance the network's ability to capture image details. Finally, experimental verification is conducted on multiple public datasets.
+
+The experimental results show that the proposed method achieves 95.6\% recognition accuracy on the ImageNet dataset, which is 3.2 percentage points higher than traditional methods. This method still maintains high recognition stability in complex scenes such as illumination changes and occlusion. Ablation experiments validate the effectiveness of the multi-scale module, and the impact of different network depths is analyzed.
+
+The research results of this paper can provide technical reference for image recognition applications in fields such as intelligent surveillance and autonomous driving, and also offer new insights for deep network architecture design.
+
+\vspace{0.5cm}
+
+\noindent\textbf{KEY WORDS:} Deep Learning; Convolutional Neural Network; Image Recognition; Feature Extraction; Multi-Scale
+
+% ============================================================
+% 目录（自动生成）
+% ============================================================
+\newpage
+\thispagestyle{plain}
+\renewcommand{\contentsname}{目\quad 录}
 \tableofcontents
 
-% ------------------------------------------------------------
-% 插图清单 (可选)
-% ------------------------------------------------------------
-% \listoffigures
-% \addcontentsline{toc}{chapter}{插图清单}
+% 正文部分使用阿拉伯数字页码
+\newpage
+\pagenumbering{arabic}
 
-% ------------------------------------------------------------
-% 表格清单 (可选)
-% ------------------------------------------------------------
-% \listoftables
-% \addcontentsline{toc}{chapter}{表格清单}
+% ============================================================
+% 第一章 引言（绪论）
+% ============================================================
+\clearpage
+\section{引言（绪论）}
 
-% ------------------------------------------------------------
-% 主要符号表 (可选)
-% ------------------------------------------------------------
-% \input{chapters/symbols}
+\subsection{课题背景和意义}
 
-% ------------------------------------------------------------
-% 正文部分
-% ------------------------------------------------------------
-\mainmatter
+随着人工智能技术的快速发展，计算机视觉在各个领域得到了广泛应用。图像识别作为计算机视觉的核心任务之一，其目标是通过计算机算法自动识别图像中的物体、场景或行为。传统的图像识别方法主要依赖于手工设计的特征，如SIFT、HOG等，这些方法在简单场景下表现良好，但在复杂场景下识别准确率较低\cite{ref1}。
 
-% 各章节文件引入
-\input{chapters/chapter1}
-\input{chapters/chapter2}
+近年来，深度学习技术的兴起为图像识别带来了革命性的变化。卷积神经网络（Convolutional Neural Network, CNN）能够自动学习图像的多层次特征表示，大幅提升了图像识别的准确率。然而，现有方法在处理光照变化、遮挡等复杂场景时仍存在挑战\cite{ref2}。
 
-% ------------------------------------------------------------
-% 结论
-% ------------------------------------------------------------
-\input{chapters/conclusion}
+本文旨在研究一种基于改进卷积神经网络的图像识别方法，提高在复杂场景下的识别准确率和鲁棒性。
 
-% ------------------------------------------------------------
-% 参考文献
-% ------------------------------------------------------------
-\backmatter
-\bibliographystyle{gbt7714-numerical}  % 国标GB/T 7714-2015 顺序编码制
-\bibliography{references}
+\subsection{研究现状}
 
-% ------------------------------------------------------------
-% 附录 (可选)
-% ------------------------------------------------------------
+目前，图像识别领域的研究主要集中在以下几个方面：
+
+1. 网络结构设计：如ResNet\cite{ref3}、DenseNet等深度网络结构的提出，解决了深层网络的梯度消失问题。
+
+2. 注意力机制：通过引入通道注意力或空间注意力机制，增强网络对重要特征的关注\cite{ref4}。
+
+3. 数据增强：通过旋转、裁剪、颜色变换等方法扩充训练数据，提高模型的泛化能力。
+
+尽管现有方法取得了显著进展，但在多尺度特征融合和复杂背景干扰方面仍有提升空间。
+
+\subsection{本文研究内容}
+
+本文的主要研究内容包括：
+
+1. 设计一种多尺度特征提取模块，增强网络对图像细节的捕捉能力。
+
+ 2. 构建大规模图像数据集并进行标注。
+
+3. 在多个公开数据集上进行实验验证，分析方法的有效性。
+
+% ============================================================
+% 第二章 相关技术介绍
+% ============================================================
+\clearpage
+\section{相关技术介绍}
+
+\subsection{卷积神经网络基础}
+
+卷积神经网络是一种前馈神经网络，其核心操作包括卷积层、池化层和全连接层。卷积层通过卷积核提取局部特征，池化层用于降维和特征选择，全连接层用于分类。
+
+卷积操作可以表示为公式\eqref{eq:conv}：
+
+\begin{equation}
+    y_{i,j} = \sum_{m=0}^{k-1}\sum_{n=0}^{k-1} w_{m,n} \cdot x_{i+m,j+n} + b \label{eq:conv}
+\end{equation}
+
+其中，$w$为卷积核权重，$x$为输入特征图，$b$为偏置项，变量使用斜体。
+
+\subsection{ResNet网络结构}
+
+ResNet通过引入残差连接解决了深层网络的梯度消失问题。残差块的结构如图\ref{fig:resblock}所示。
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{example-image}
+    \caption{残差块结构图}
+    \label{fig:resblock}
+\end{figure}
+
+图中展示了跳跃连接将输入直接加到输出上，使得网络可以学习残差映射。
+
+% ============================================================
+% 第三章 实验与分析
+% ============================================================
+\clearpage
+\section{实验与分析}
+
+\subsection{实验数据集}
+
+本文使用ImageNet数据集进行实验，该数据集包含1000个类别，约120万张训练图像和5万张验证图像。
+
+\subsection{实验结果}
+
+实验结果如表\ref{tab:result}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{不同方法在ImageNet上的识别准确率}
+    \begin{tabular}{ccc}
+        \toprule
+        \textbf{方法} & \textbf{Top-1准确率} & \textbf{Top-5准确率} \\
+        \midrule
+        VGG-16 & 71.5\% & 90.1\% \\
+        ResNet-50 & 76.1\% & 92.9\% \\
+        DenseNet-121 & 74.9\% & 92.3\% \\
+        \textbf{本文方法} & \textbf{78.2\%} & \textbf{94.1\%} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:result}
+\end{table}
+
+从表\ref{tab:result}可以看出，本文提出的方法在ImageNet数据集上取得了最高的识别准确率，相比ResNet-50提升了2.1个百分点。
+
+\subsection{结果分析}
+
+为了进一步验证多尺度模块的有效性，我们进行了消融实验，结果如表\ref{tab:ablation}所示。
+
+\begin{table}[H]
+    \centering
+    \caption{消融实验（Top-1准确率）}
+    \begin{tabular}{cccc}
+        \toprule
+        \textbf{基线模型} & \textbf{+多尺度模块} & \textbf{+注意力机制} & \textbf{本文完整模型} \\
+        \midrule
+        76.1\% & 77.5\% & 77.2\% & 78.2\% \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:ablation}
+\end{table}
+
+结果表明，多尺度模块和注意力机制均能提升性能，二者结合效果最佳。
+
+% ============================================================
+% 第四章 总结与展望
+% ============================================================
+\clearpage
+\section{总结与展望}
+
+\subsection{工作总结}
+
+本文提出了一种基于改进卷积神经网络的图像识别方法，主要工作如下：
+
+1. 设计了多尺度特征提取模块，增强了网络对图像细节的捕捉能力。
+
+2. 在ImageNet数据集上进行了实验验证，取得了78.2\%的Top-1准确率。
+
+ 3. 通过消融实验验证了各模块的有效性。
+
+本研究的创新点在于将多尺度特征与残差网络有机结合，在保持计算效率的同时提升了识别精度。
+
+\subsection{工作展望}
+
+未来的研究方向包括：
+
+ 1. 进一步优化网络结构，减少参数量和计算量，以适应移动端部署。
+
+ 2. 探索半监督学习在图像识别中的应用，降低对标注数据的依赖。
+
+ 3. 将方法应用到实际场景中，如智能监控、自动驾驶等，验证其泛化能力。
+
+% ============================================================
+% 参考文献（标题与内容连续，不单独成页）
+% ============================================================
+\newpage
+\begin{thebibliography}{99}
+\fontsize{10.5pt}{15.75pt}\selectfont
+\bibitem{ref1} Lowe D G. Distinctive image features from scale-invariant keypoints[J]. International Journal of Computer Vision, 2004, 60(2): 91-110.
+\bibitem{ref2} Krizhevsky A, Sutskever I, Hinton G E. ImageNet classification with deep convolutional neural networks[J]. Communications of the ACM, 2017, 60(6): 84-90.
+\bibitem{ref3} He K, Zhang X, Ren S, et al. Deep residual learning for image recognition[C]. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2016: 770-778.
+\bibitem{ref4} Hu J, Shen L, Sun G. Squeeze-and-excitation networks[C]. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2018: 7132-7141.
+\bibitem{ref5} Simonyan K, Zisserman A. Very deep convolutional networks for large-scale image recognition[J]. arXiv preprint arXiv:1409.1556, 2014.
+\bibitem{ref6} Szegedy C, Liu W, Jia Y, et al. Going deeper with convolutions[C]. Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2015: 1-9.
+\end{thebibliography}
+
+% ============================================================
+% 附录
+% ============================================================
+\newpage
 \appendix
-\input{chapters/appendix}
+\renewcommand{\thesection}{附录\Alph{section}}
+\section{实验环境配置}
 
-% ------------------------------------------------------------
+实验环境如下：
+
+操作系统：Ubuntu 20.04
+
+CPU：Intel Core i9-10900K
+
+GPU：NVIDIA RTX 3090 (24GB)
+
+内存：64GB
+
+深度学习框架：PyTorch 1.9.0
+
+\section{主要代码示例}
+
+\begin{verbatim}
+import torch
+import torch.nn as nn
+
+class MultiScaleBlock(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super(MultiScaleBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, out_channels, 1)
+        self.conv3 = nn.Conv2d(in_channels, out_channels, 3, padding=1)
+        self.conv5 = nn.Conv2d(in_channels, out_channels, 5, padding=2)
+        
+    def forward(self, x):
+        out1 = self.conv1(x)
+        out2 = self.conv3(x)
+        out3 = self.conv5(x)
+        return out1 + out2 + out3
+\end{verbatim}
+
+% ============================================================
 % 致谢
-% ------------------------------------------------------------
-\input{chapters/acknowledgement}
+% ============================================================
+\newpage
+\phantomsection
+\addcontentsline{toc}{section}{致谢}
+\begin{center}
+    {\zihao{3}\bfseries 致\hspace{4\ccwd}谢}
+\end{center}
 
-% ------------------------------------------------------------
-% 攻读学位期间取得的成果 (可选)
-% ------------------------------------------------------------
-% \input{chapters/publications}
+\vspace{0.5cm}
+
+时光荏苒，四年的大学生活即将结束。在本论文完成之际，我要向所有给予我帮助和支持的人表示衷心的感谢。
+
+首先，感谢我的指导老师李四教授。从论文选题、方案设计到论文撰写，李老师都给予了悉心的指导和宝贵的建议。李老师严谨的治学态度和渊博的学识深深影响了我，使我受益匪浅。
+
+其次，感谢实验室的同学们，在学习和生活中给予了我很多帮助和鼓励。
+
+最后，感谢我的家人，他们一直以来的支持和理解是我完成学业的坚强后盾。
+
+\vspace{1cm}
+\begin{flushright}
+    作者：张三 \\
+    2024年5月于湖北大学
+\end{flushright}
 
 \end{document}
-% ============================================================
-% 文档结束
-% ============================================================
